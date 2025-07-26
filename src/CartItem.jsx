@@ -1,37 +1,64 @@
-import { createSlice } from '@reduxjs/toolkit';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateQuantity, removeItem } from './CartSlice';
+import './CartItem.css';
 
-const initialState = {
-  items: [], // Array to hold the cart items
-};
+function CartItem({ onContinueShopping }) {
+  const cartItems = useSelector(state => state.cart.items);
+  const dispatch = useDispatch();
 
-const CartSlice = createSlice({
-  name: 'cart',
-  initialState,
-  reducers: {
-    addItem: (state, action) => {
-      const { name, image, cost } = action.payload;
-      const existingItem = state.items.find(item => item.name === name);
-      if (existingItem) {
-        existingItem.quantity++;
-      } else {
-        // If item does not exist, add it to the cart with quantity 1
-        state.items.push({ name, image, cost, quantity: 1 });
-      }
-    },
-    removeItem: (state, action) => {
-      state.items = state.items.filter(item => item.name !== action.payload);
-    },
-    updateQuantity: (state, action) => {
-      const { name, quantity } = action.payload; // Destructure the product name and new quantity from the action payload
-      // Find the item in the cart that matches the given name
-      const itemToUpdate = state.items.find(item => item.name === name);
-      if (itemToUpdate) {
-        itemToUpdate.quantity = quantity; // If the item is found, update its quantity to the new value
-      }
-    },
-  },
-});
+  const handleIncrease = (item) => {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+  };
 
-export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
+  const handleDecrease = (item) => {
+    if (item.quantity > 1) {
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+    }
+  };
 
-export default CartSlice.reducer;
+  const handleRemove = (name) => {
+    dispatch(removeItem(name));
+  };
+
+  const calculateTotalCost = () => {
+    return cartItems.reduce((total, item) => {
+      const itemCost = parseFloat(item.cost.replace('$', ''));
+      return total + item.quantity * itemCost;
+    }, 0).toFixed(2);
+  };
+
+  return (
+    <div className="cart-container">
+      <h2>Your Shopping Cart</h2>
+      {cartItems.length === 0 ? (
+        <p>The cart is currently empty.</p>
+      ) : (
+        <div className="cart-list">
+          {cartItems.map(item => (
+            <div key={item.name} className="cart-card">
+              <img src={item.image} alt={item.name} className="cart-image" />
+              <div className="cart-details">
+                <h3>{item.name}</h3>
+                <p>Unit Cost: {item.cost}</p>
+                <p>Quantity: {item.quantity}</p>
+                <p>Total: ${(parseFloat(item.cost.replace('$', '')) * item.quantity).toFixed(2)}</p>
+                <div className="cart-buttons">
+                  <button onClick={() => handleIncrease(item)}>+</button>
+                  <button onClick={() => handleDecrease(item)} disabled={item.quantity === 1}>-</button>
+                  <button onClick={() => handleRemove(item.name)}>Delete</button>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="cart-summary">
+            <h4>Grand Total: ${calculateTotalCost()}</h4>
+          </div>
+        </div>
+      )}
+      <button onClick={onContinueShopping}>Continue Shopping</button>
+    </div>
+  );
+}
+
+export default CartItem;
