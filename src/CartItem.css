@@ -256,4 +256,35 @@
   background-color: #45a049;
 }
 
+
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.cart-container p {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.get-started-button1 {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.get-started-button1:hover {
+  background-color: #45a049;
+}
+
   
