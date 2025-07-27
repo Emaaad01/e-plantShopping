@@ -250,3 +250,21 @@ body {
         text-align: center; /* Align text to the center */
       }
   }
+
+  
+product-button {
+    background-color: #4CAF50; /* أخضر */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .product-button.added {
+    background-color: grey; /* رمادي */
+    cursor: not-allowed;
+  }
+  

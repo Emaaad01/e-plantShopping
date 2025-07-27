@@ -269,6 +269,16 @@ function ProductList({ onHomeClick }) {
           [product.name]: true, // Set the current product's name as a key with value 'true' to mark it as added
         }));
       };
+
+      
+useEffect(() => {
+    const updatedState = {};
+    cartItems.forEach(item => {
+      updatedState[item.name] = true;
+    });
+    setAddedToCart(updatedState);
+  }, [cartItems]);
+  
     return (
         <div>
             <div className="navbar" style={styleObj}>
